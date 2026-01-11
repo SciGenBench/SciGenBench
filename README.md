@@ -106,157 +106,46 @@ We fine-tuned Qwen3-VL-8B using synthetic data from different sources.
 
 ## 🛠️ Usage
 
-### 1. Installation
+### Installation
 
 ```bash
 git clone https://github.com/SciGenBench/SciGenBench.git
 cd SciGenBench
 pip install -r requirements.txt
+
+# Required API keys (set according to models you use)
+export OPENAI_API_KEY="your-api-key-here" # For Gemini, GPT Qwen, NanoBanana, Seedream
+export TENCENT_SECRET_ID="your-secret-id" # For Hunyuan
+export TENCENT_SECRET_KEY="your-secret-key" # For Hunyuan
+export BFL_API_KEY="your-bfl-api-key" # For Flux2
 ```
 
-### 2. Environment Setup
-
-```bash
-# Set API Key
-export OPENAI_API_KEY="your-api-key-here"
-
-# Optional: Set font directory (for Chinese/special characters)
-export FONT_DIR="/path/to/fonts"
-```
-
-### 3. Quick Start (Unified Runner)
-
-We provide a unified runner script that supports both image generation and evaluation:
+### Quick Start
 
 ```bash
 # List available models
 python run.py --list-models --dataset scigen
-python run.py --list-models --dataset seephys
 
-# Generate images only
-python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode generate
-
-# Evaluate only (LLM-as-Judge)
-python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode eval --metric judge
-
-# Evaluate only (Inverse Quiz Validation)
-python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode eval --metric quiz
-
-# Generate and evaluate all metrics
+# Generate and evaluate
 python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode all
 
-# With verbose output
-python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode all -v
-```
+# Generate only
+python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode generate
 
-### 4. Evaluation Metrics
-
-#### 4.1 LLM-as-Judge
-
-Evaluates generated images on 5 dimensions (0-2 scale):
-- **Correctness & Fidelity**: Accuracy and completeness of elements
-- **Layout & Precision**: Visual arrangement and technical precision
-- **Readability & Occlusion**: Clarity and absence of overlapping elements
-- **Scientific Plausibility**: Conformity to scientific principles
-- **Expressiveness & Richness**: Contextual completeness
-
-#### 4.2 Inverse Quiz Validation
-
-Validates information completeness through reverse verification:
-- Generates questions based on images
-- Verifies if models can extract key information from images
-
-### 5. Supported Models
-
-#### SciGen Dataset
-- `gemini-3-pro-imgcoder` - Gemini 3 Pro + ImgCoder
-- `gemini-3-flash-imgcoder` - Gemini 3 Flash + ImgCoder
-- `qwen3-imgcoder` - Qwen3 + ImgCoder
-- `gpt-image1` - GPT Image 1
-- `gpt-image1_5` - GPT Image 1.5
-- `gpt-image1-mini` - GPT Image 1 Mini
-- `nanobanana` - NanoBanana
-- `nanobananapro` - NanoBanana Pro
-- `qwen-image-plus` - Qwen Image Plus
-- `hunyuan` - Hunyuan
-- `flux2` - Flux 2
-- `seedream` - SeeDream
-
-#### SeePhys Dataset
-- `gemini-3-pro-imgcoder`
-- `gemini-3-flash-imgcoder`
-- `qwen3-imgcoder`
-- `gpt-image1`
-- `gpt-image1_5`
-- `nanobanana`
-- `nanopro` - Nano Pro (SeePhys specific)
-- `qwen-image-plus`
-- `hunyuan`
-- `flux2`
-- `seedream`
-
-### 6. Output Results
-
-#### Image Output
-- Location: `images/{dataset}/{model}/images/`
-- Format: PNG or JPG
-- ImgCoder Code: `images/{dataset}/{model}/codes/` (ImgCoder models only)
-
-#### Evaluation Results
-
-**LLM-as-Judge**
-- Location: `results/{dataset}/llm_as_judge/{model}_quality_scores.csv`
-- Contains: 5-dimensional scores (0-2 scale)
-
-**Inverse Quiz Validation**
-- Location: `results/{dataset}/quiz/{model}_detailed_evaluation.csv`
-- Contains: Per-question correctness, overall accuracy, perfect image rate
-
-The script automatically displays a results summary after running the full pipeline.
-
-### 7. Advanced Usage
-
-#### Skip Results Summary
-
-```bash
-python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode all --skip-summary
-```
-
-#### Evaluate Only (No Generation)
-
-```bash
+# Evaluate only
 python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode eval --metric all
 ```
 
-#### Batch Processing
+### Supported Models
 
-```bash
-# Example: Batch generation and evaluation
-for model in gemini-3-pro-imgcoder qwen3-imgcoder nanobanana; do
-    python run.py --dataset scigen --model $model --mode all
-done
-```
+**SciGen**: `gemini-3-pro-imgcoder`, `gemini-3-flash-imgcoder`, `qwen3-imgcoder`, `gpt-image1`, `gpt-image1_5`, `gpt-image1-mini`, `nanobanana`, `nanobananapro`, `qwen-image-plus`, `hunyuan`, `flux2`, `seedream`
 
-### 8. Manual Usage (Advanced)
+**SeePhys**: Same as above, plus `nanopro` (replaces `nanobananapro`)
 
-#### Run ImgCoder Generation
+### Output
 
-```bash
-cd src/infer/scigen
-python gemini-3-pro-imgcoder.py
-```
-
-#### Run Evaluation
-
-```bash
-# LLM-as-Judge
-cd src/eval
-python llm_as_judge.py --dataset scigen
-
-# Inverse Quiz Validation
-python quiz.py  # for scigen
-python quiz_seephys.py  # for seephys
-```
+- **Images**: `images/{dataset}/{model}/images/`
+- **Results**: `results/{dataset}/llm_as_judge/` and `results/{dataset}/quiz/`
 ---
 
 ## 📝 Citation

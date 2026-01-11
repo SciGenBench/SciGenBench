@@ -1,0 +1,27 @@
+# Core dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+tqdm>=4.65.0
+
+# Image processing
+Pillow>=10.0.0
+scikit-image>=0.21.0
+
+# Deep learning frameworks
+torch>=2.0.0
+torchvision>=0.15.0
+torchmetrics>=1.0.0
+
+# Transformers and models
+transformers>=4.30.0
+
+# API clients
+openai>=1.0.0
+requests>=2.31.0
+
+# Cloud SDKs
+tencentcloud-sdk-python>=3.0.0
+
+# Visualization
+matplotlib>=3.7.0
+
