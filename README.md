@@ -4,6 +4,7 @@
 <p align="center">
     <a href="https://github.com/SciGenBench/SciGenBench"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
     <a href="https://github.com/SciGenBench/SciGenBench/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SciGenBench/SciGenBench"></a>
+    <a href="https://huggingface.co/datasets/J017athan/SciGenBench"><img src="https://img.shields.io/badge/🤗-HuggingFace%20Dataset-yellow"></a>
     <a href="https://hub.zenoml.com/project/b468f508-6492-40f2-8ff3-9db8db44c1b7/SciGenBench"><img src="https://img.shields.io/badge/📊-Model%20Outputs-purple"></a>
 </p>
 
