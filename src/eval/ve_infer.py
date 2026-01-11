@@ -208,10 +208,12 @@ class SciGenEvaluator:
         """
         item_id = str(item["id"])
         
-        # 标准化返回结构
+        # 标准化返回结构（与 quiz.py 格式一致）
+        # 使用 quiz_idx = -2 来标识这是 VQA 结果（-1 已被 quiz.py 用于失败记录）
         result_row = {
             "id": item_id,
             "model": model_name,
+            "quiz_idx": -2,  # -2 表示 VQA 结果，与 quiz 区分
             "question_text": "",
             "pred": "",
             "gt": "",
@@ -318,17 +320,18 @@ def run_evaluation(dataset_name, model: str = None):
     PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     # 数据集配置
+    # 作为 quiz 的一部分，结果保存到 quiz 目录
     dataset_configs = {
         "scigen": {
             "data_path": os.path.join(PROJECT_ROOT, "data", "scigenbench.json"),
             "image_base_dir": os.path.join(PROJECT_ROOT, "images", "scigen"),
-            "results_dir": os.path.join(PROJECT_ROOT, "results", "scigen", "vqa"),
+            "results_dir": os.path.join(PROJECT_ROOT, "results", "scigen", "quiz"),  # 保存到 quiz 目录
             "models": ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
         },
         "seephys": {
             "data_path": os.path.join(PROJECT_ROOT, "data", "scigenbench.json"),
             "image_base_dir": os.path.join(PROJECT_ROOT, "images", "seephys"),
-            "results_dir": os.path.join(PROJECT_ROOT, "results", "seephys", "vqa"),
+            "results_dir": os.path.join(PROJECT_ROOT, "results", "seephys", "quiz"),  # 保存到 quiz 目录
             "models": ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
         }
     }
@@ -379,24 +382,26 @@ def run_evaluation(dataset_name, model: str = None):
         print(f"Starting evaluation for model: {model_name}")
         print(f"=========================================")
         
-        output_csv_path = os.path.join(RESULTS_DIR, f"{model_name}_eval_cot.csv")
+        # VQA 结果追加到 quiz 的 CSV 文件中（与 quiz.py 使用同一个文件）
+        output_csv_path = os.path.join(RESULTS_DIR, f"{model_name}_detailed_evaluation.csv")
         
         # === 断点续跑逻辑 ===
+        # 只检查 quiz_idx = -2 的记录（VQA 结果）
         processed_ids = set()
         if os.path.exists(output_csv_path):
             try:
                 existing_df = pd.read_csv(output_csv_path)
-                if "id" in existing_df.columns:
-                    # 只统计没有错误的记录为已处理
-                    # 有错误的记录会被重试
-                    if "error_msg" in existing_df.columns:
-                        valid_df = existing_df[existing_df["error_msg"].isna() | (existing_df["error_msg"] == "")]
+                if "id" in existing_df.columns and "quiz_idx" in existing_df.columns:
+                    # 只统计 quiz_idx = -2 且没有错误的记录为已处理
+                    vqa_df = existing_df[existing_df["quiz_idx"] == -2]
+                    if "error_msg" in vqa_df.columns:
+                        valid_df = vqa_df[vqa_df["error_msg"].isna() | (vqa_df["error_msg"] == "")]
                         processed_ids = set(valid_df["id"].astype(str))
-                        error_count = len(existing_df) - len(valid_df)
+                        error_count = len(vqa_df) - len(valid_df)
                         if error_count > 0:
                             print(f"-> Found {error_count} failed records, will retry them.")
                     else:
-                        processed_ids = set(existing_df["id"].astype(str))
+                        processed_ids = set(vqa_df["id"].astype(str))
                 print(f"-> Resuming... Found {len(processed_ids)} successfully processed items.")
             except Exception as e:
                 print(f"-> Warning: Read error. Starting fresh. Error: {e}")
@@ -427,9 +432,8 @@ def run_evaluation(dataset_name, model: str = None):
                     skipped_count += 1
         
         if skipped_count > 0:
-            dataset_type = "scigen" if is_scigen else "seephys"
             field_name = "multimodal_question" if is_scigen else "question"
-            print(f"-> Skipping {skipped_count} items without '{field_name}' ({dataset_type} dataset)")
+            print(f"-> Skipping {skipped_count} items without '{field_name}'")
 
         if items_to_process:
             print(f"-> Processing {len(items_to_process)} remaining items...")
@@ -470,7 +474,7 @@ def run_evaluation(dataset_name, model: str = None):
                         traceback.print_exc()
 
         # =========================================================
-        # Final Scoring Section
+        # Final Scoring Section (只统计 quiz_idx = -2 的结果)
         # =========================================================
         print(f"\nCalculating Final Score for {model_name}...")
         if os.path.exists(output_csv_path):
@@ -478,16 +482,28 @@ def run_evaluation(dataset_name, model: str = None):
                 final_df = pd.read_csv(output_csv_path)
                 final_df['id'] = final_df['id'].astype(str)
                 
+                # 只统计 quiz_idx = -2 的记录
+                if 'quiz_idx' in final_df.columns:
+                    target_df = final_df[final_df['quiz_idx'] == -2].copy()
+                else:
+                    target_df = pd.DataFrame()
+                    print("-> Warning: quiz_idx column not found, cannot filter results.")
+                
                 # 过滤掉 error_msg 不为空的行，只统计成功的记录
-                if 'error_msg' in final_df.columns:
-                    valid_df = final_df[final_df['error_msg'].isna() | (final_df['error_msg'] == "")].copy()
-                    error_count = len(final_df) - len(valid_df)
+                if not target_df.empty and 'error_msg' in target_df.columns:
+                    valid_df = target_df[target_df['error_msg'].isna() | (target_df['error_msg'] == "")].copy()
+                    error_count = len(target_df) - len(valid_df)
                     if error_count > 0:
                         print(f"-> Note: {error_count} records have errors and are excluded from statistics.")
+                elif not target_df.empty:
+                    valid_df = target_df.copy()
                 else:
-                    valid_df = final_df.copy()
+                    valid_df = pd.DataFrame()
                 
                 if not valid_df.empty:
+                    # 确保 is_correct 是数值类型
+                    valid_df['is_correct'] = pd.to_numeric(valid_df['is_correct'], errors='coerce').fillna(0)
+                    
                     if 'image_type' not in valid_df.columns:
                          valid_df['image_type'] = valid_df['id'].map(id_to_type_map)
                     valid_df['image_type'] = valid_df['image_type'].fillna('Unknown')

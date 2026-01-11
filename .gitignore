@@ -1,5 +1,6 @@
 results/
 images/
+tmp/
 
 # Python cache files
 __pycache__/

@@ -176,7 +176,7 @@ def run_generation(dataset: str, model: str, verbose: bool = False) -> bool:
             pass
 
 def run_vqa_evaluation(dataset: str, model: str = None, verbose: bool = False) -> bool:
-    """运行 VQA 评估（作为 quiz 的一部分）"""
+    """运行额外评估（作为 quiz 的一部分）"""
     original_cwd = os.getcwd()
     try:
         script_path = PROJECT_ROOT / "src" / "eval" / "ve_infer.py"
@@ -358,41 +358,38 @@ def summarize_results(dataset: str, model: str, metrics: List[str]) -> None:
         else:
             print("⚠️  Judge results file not found")
     
-    # Quiz 结果（合并 quiz 和 vqa 的结果）
+    # Quiz 结果（合并 quiz 和 vqa 的结果，两者都在同一个 CSV 文件中）
     if "quiz" in metrics:
         quiz_dir = results_dir / "quiz"
         quiz_file = quiz_dir / f"{model}_detailed_evaluation.csv"
-        vqa_dir = results_dir / "vqa"
-        vqa_file = vqa_dir / f"{model}_eval_cot.csv"
         
         quiz_df = None
         vqa_df = None
         
-        # 读取 quiz 结果
+        # 从同一个 CSV 文件中读取 quiz 和 vqa 结果
         if quiz_file.exists():
             try:
-                quiz_df = pd.read_csv(quiz_file)
-                quiz_df = quiz_df[quiz_df['quiz_idx'] >= 0].copy()
-            except Exception as e:
-                print(f"⚠️  Error reading quiz results: {e}")
-        
-        # 读取 vqa 结果（仅 scigen 数据集有 VQA）
-        vqa_df = None
-        if dataset == "scigen":
-            if vqa_file.exists():
-                try:
-                    vqa_df = pd.read_csv(vqa_file)
+                all_df = pd.read_csv(quiz_file)
+                
+                # 分离 quiz 结果（quiz_idx >= 0）和 vqa 结果（quiz_idx = -2）
+                quiz_df = all_df[all_df['quiz_idx'] >= 0].copy()
+                
+                # 读取 vqa 结果（仅 scigen 数据集有 VQA，quiz_idx = -2）
+                if dataset == "scigen" and 'quiz_idx' in all_df.columns:
+                    vqa_df = all_df[all_df['quiz_idx'] == -2].copy()
                     # 过滤掉有错误的记录
                     if 'error_msg' in vqa_df.columns:
                         vqa_df = vqa_df[vqa_df['error_msg'].isna() | (vqa_df['error_msg'] == "")].copy()
-                except Exception as e:
-                    print(f"⚠️  Error reading VQA results: {e}")
+            except Exception as e:
+                print(f"⚠️  Error reading quiz results: {e}")
         
         # 合并 quiz 和 vqa 结果（仅 scigen）
         if dataset == "scigen" and quiz_df is not None and vqa_df is not None and not vqa_df.empty:
+            # 确保 is_correct 是数值类型
+            quiz_df['is_correct'] = pd.to_numeric(quiz_df['is_correct'], errors='coerce').fillna(0)
+            vqa_df['is_correct'] = pd.to_numeric(vqa_df['is_correct'], errors='coerce').fillna(0)
+            
             # 合并两个 DataFrame
-            # quiz 使用 id, quiz_idx, is_correct
-            # vqa 使用 id, is_correct，需要转换为相同格式
             quiz_combined = quiz_df[['id', 'is_correct']].copy()
             vqa_combined = vqa_df[['id', 'is_correct']].copy()
             
@@ -408,15 +405,16 @@ def summarize_results(dataset: str, model: str, metrics: List[str]) -> None:
             perfect_images = (image_stats == 1.0).sum()
             perfect_rate = perfect_images / len(image_stats) if len(image_stats) > 0 else 0
             
-            print("\n📝 Inverse Quiz Validation Results (Quiz + VQA combined):")
+            print("\n📝 Inverse Quiz Validation Results:")
             print("-" * 60)
-            print(f"  Quiz Questions    : {len(quiz_combined)}")
-            print(f"  VQA Questions     : {len(vqa_combined)}")
             print(f"  Total Questions   : {total_questions}")
             print(f"  Question Accuracy : {overall_acc:.2%} ({total_correct}/{total_questions})")
             print(f"  Perfect Image Rate : {perfect_rate:.2%} ({perfect_images}/{len(image_stats)})")
             print("-" * 60)
         elif quiz_df is not None and not quiz_df.empty:
+            # 确保 is_correct 是数值类型
+            quiz_df['is_correct'] = pd.to_numeric(quiz_df['is_correct'], errors='coerce').fillna(0)
+            
             # 只有 quiz 结果（seephys 或 scigen 没有 vqa 结果时）
             total_questions = len(quiz_df)
             total_correct = quiz_df['is_correct'].sum()
@@ -426,16 +424,13 @@ def summarize_results(dataset: str, model: str, metrics: List[str]) -> None:
             perfect_images = (image_stats == 1.0).sum()
             perfect_rate = perfect_images / len(image_stats) if len(image_stats) > 0 else 0
             
-            if dataset == "scigen" and vqa_file.exists():
-                print("\n📝 Inverse Quiz Validation Results (Quiz only, VQA file exists but no valid data):")
-            else:
-                print("\n📝 Inverse Quiz Validation Results:")
+            print("\n📝 Inverse Quiz Validation Results:")
             print("-" * 60)
             print(f"  Question Accuracy : {overall_acc:.2%} ({total_correct}/{total_questions})")
             print(f"  Perfect Image Rate : {perfect_rate:.2%} ({perfect_images}/{len(image_stats)})")
             print("-" * 60)
         else:
-            print("⚠️  No valid quiz or VQA results found")
+            print("⚠️  No valid quiz results found")
     
     # T2I 结果（仅 seephys）
     if "t2i" in metrics and dataset == "seephys":
@@ -594,15 +589,15 @@ Examples:
                 print(f"\n⚠️  Evaluation '{metric}' failed. Continuing...")
                 eval_success = False
             
-            # 如果运行了 quiz，且数据集是 scigen，自动运行 VQA（ve_infer.py）
-            # VQA 只适用于 scigen 数据集
+            # 如果运行了 quiz，且数据集是 scigen，自动运行额外评估（ve_infer.py）
+            # 只适用于 scigen 数据集
             if metric == "quiz" and args.dataset == "scigen":
                 print(f"\n{'='*60}")
-                print(f"📊 Running VQA Evaluation (part of quiz, scigen only)")
+                print(f"📊 Running Additional Evaluation (part of quiz)")
                 print(f"{'='*60}\n")
                 vqa_success = run_vqa_evaluation(args.dataset, args.model, args.verbose)
                 if not vqa_success:
-                    print(f"\n⚠️  VQA evaluation failed. Continuing...")
+                    print(f"\n⚠️  Additional evaluation failed. Continuing...")
                     eval_success = False
     
     # 整体成功状态：生成和评估都要成功

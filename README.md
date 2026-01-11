@@ -134,7 +134,6 @@ SciGenBench/
 │   ├── scigen/
 │   │   ├── llm_as_judge/        # LMM-as-Judge scores
 │   │   ├── quiz/               # Inverse quiz validation
-│   │   └── vqa/                # VQA-based evaluation
 │   └── seephys/
 │       ├── llm_as_judge/
 │       ├── quiz/
