@@ -8,16 +8,12 @@ While synthetic data has proven effective for improving scientific reasoning in 
 Motivated by recent advances in next-generation T2I models, we conduct a systematic study of scientific image synthesis across generation paradigms, evaluation, and downstream use. We analyze both direct pixel-based generation and programmatic synthesis, and propose **ImgCoder**, a logic-driven framework that follows an explicit **“understand → plan → code”** workflow to improve structural precision.
 To rigorously assess scientific correctness, we introduce **SciGenBench**, which evaluates generated images based on information utility and logical validity. Our evaluation reveals systematic failure modes in pixel-based models and highlights a fundamental expressiveness–precision trade-off.  Finally, we show that fine-tuning Large Multimodal Models (LMMs) on rigorously verified synthetic scientific images yields consistent reasoning gains, with potential scaling trends analogous to the text domain, validating high-fidelity scientific synthesis as a viable path to unlocking massive multimodal reasoning capabilities.
 
----
-
 ## 🌟 Key Contributions
 
 * **ImgCoder Framework**: A logic-driven programmatic framework decoupling reasoning from rendering to achieve state-of-the-art structural precision.
 * **SciGenBench**: A large-scale benchmark with **1.4K problems** across **5 domains** (Math, Physics, Chemistry, Biology, Universal) and **25 image types**, utilizing a hybrid evaluation protocol (LMM-as-Judge + Inverse Quiz Validation) .
 * **Systematic Analysis**: We reveal a "Precision-Expressiveness" trade-off between pixel-based and code-based paradigms and categorize 5 systematic failure modes.
 * **Downstream Utility**: We prove that high-fidelity synthetic data scales multimodal reasoning capabilities, with performance following a log-linear growth trend.
-
----
 
 ## 📊 SciGenBench
 
@@ -50,16 +46,12 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
 - **Standard Metrics (SeePhys real-image subset)**  
   PSNR ↑, SSIM ↑, CLIP ↑, FID ↓
 
----
-
 #### 🧩 Open-source T2I Models
 
 | Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
 |------|----------------|-----|-----|-----|----|-----|------|------|------|------|
 | HunyuanImage-3.0 | 30.79 | 0.39 | 0.78 | 1.44 | 0.56 | 0.81 | 12.21 | 0.82 | 25.01 | 93.27 |
 | Qwen-Image | 38.86 | 0.24 | 0.70 | 1.48 | 0.30 | 0.76 | 9.63 | 0.78 | 25.02 | 120.42 |
-
----
 
 #### 🔒 Closed-source T2I Models
 
@@ -72,8 +64,6 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
 | GPT-Image-1.5 | 63.52 | 0.98 | 1.70 | **1.97** | 1.17 | 1.62 | **14.79** | **0.88** | 25.16 | 112.52 |
 | Nanobanana-Pro | **73.41** | 1.59 | 1.87 | **1.98** | 1.72 | **1.93** | 12.02 | 0.81 | 25.01 | 87.72 |
 
----
-
 #### 🧠 ImgCoder (Logic-Driven)
 
 | Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
@@ -81,8 +71,6 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
 | Qwen3-ImgCoder | 56.38 | 1.21 | 1.30 | 1.62 | 1.39 | 1.29 | 14.71 | 0.86 | **25.21** | 121.55 |
 | Gemini-3-Flash-ImgCoder | 76.93 | 1.80 | 1.88 | 1.88 | 1.92 | 1.91 | 14.63 | 0.85 | 25.18 | 117.83 |
 | Gemini-3-Pro-ImgCoder | **77.87** | **1.82** | **1.93** | 1.91 | **1.93** | 1.90 | 14.59 | 0.86 | 25.16 | 107.67 |
-
----
 
 ## 🚀 ImgCoder: Logic-Driven Synthesis
 
@@ -93,8 +81,6 @@ Unlike pixel-based models that generate images end-to-end, **ImgCoder** adopts a
 3. **Code**: Generates executable code (Python/Matplotlib/TikZ) to render the diagram deterministically.
 
 This approach eliminates hallucinations in structure-heavy tasks (e.g., coordinate systems, circuit topologies).
-
----
 
 ## 📈 Downstream Utility & Scaling
 
@@ -120,7 +106,6 @@ We fine-tuned Qwen3-VL-8B using synthetic data from different sources.
 | Qwen-Image            | 68.2     | 45.9     | 57.1     |
 | *Baseline*            | *61.9*   | *39.0*   | *54.5*   |
 
----
 ## 📂 Project Structure
 
 ```bash
@@ -159,8 +144,6 @@ SciGenBench/
 └── LICENSE
 ```
 
----
-
 ## 🛠️ Usage
 
 ### Installation
@@ -197,7 +180,6 @@ python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode eval --metri
 
 - **Images**: `images/{dataset}/{model}/{id}`
 - **Results**: `results/{dataset}/{metric}`
----
 
 ## 📝 Citation
 
