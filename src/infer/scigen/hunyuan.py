@@ -28,7 +28,7 @@ if not SECRET_KEY:
 REGION = "ap-shanghai"
 
 # 输入输出配置（相对于项目根目录）
-INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigen.json")
+INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "images", "scigen", "hunyuan")
 
 # 混元生图必须保持单线程
@@ -230,7 +230,10 @@ def main():
     print(f"读取数据: {INPUT_FILE}")
     try:
         with open(INPUT_FILE, 'r', encoding='utf-8') as f:
-            data_items = json.load(f)
+            all_data = json.load(f)
+        # 根据 source 字段过滤数据（scigen 目录只处理 source=scigen）
+        data_items = [item for item in all_data if item.get('source') == 'scigen']
+        print(f"共加载 {len(data_items)} 条 scigen 任务 (从 {len(all_data)} 条总数据中过滤)")
     except Exception as e:
         print(f"文件读取失败: {e}")
         return

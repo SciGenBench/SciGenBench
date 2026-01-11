@@ -377,7 +377,8 @@ def main():
     # 获取项目根目录（假设脚本从项目根目录运行）
     PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
-    DATA_PATH = os.path.join(PROJECT_ROOT, "data", "seephys.json")
+    # 统一使用 scigenbench.json
+    DATA_PATH = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
     IMAGE_BASE_DIR = os.path.join(PROJECT_ROOT, "images", "seephys")
     RESULTS_DIR = os.path.join(PROJECT_ROOT, "results", "seephys", "quiz")
     
@@ -389,7 +390,11 @@ def main():
 
     print("Loading benchmark data...")
     with open(DATA_PATH, 'r', encoding='utf-8') as f:
-        benchmark_data = json.load(f)
+        all_data = json.load(f)
+    
+    # 根据 source 字段过滤数据（quiz_seephys.py 只处理 seephys）
+    benchmark_data = [item for item in all_data if item.get('source') == 'seephys']
+    print(f"Loaded {len(benchmark_data)} items from seephys (filtered from {len(all_data)} total items)")
 
     # 建立 ID 到 Image Type 的映射
     id_to_type_map = {str(item["id"]): item.get("image_type", "Unknown") for item in benchmark_data}

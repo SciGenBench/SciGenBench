@@ -21,7 +21,7 @@ if not API_KEY:
 BASE_HOST = 'http://35.220.164.252:3888/v1' 
 
 # 输入输出配置（相对于项目根目录）
-INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "seephys.json")
+INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "images", "seephys", "gpt-image1")
 
 # 模型配置
@@ -100,7 +100,10 @@ def generate_images_concurrently():
     print(f"正在读取数据: {INPUT_FILE} ...")
     try:
         with open(INPUT_FILE, 'r', encoding='utf-8') as f:
-            data_items = json.load(f)
+            all_data = json.load(f)
+        # 根据 source 字段过滤数据（seephys 目录只处理 source=seephys）
+        data_items = [item for item in all_data if item.get('source') == 'seephys']
+        print(f"共加载 {len(data_items)} 条 seephys 任务 (从 {len(all_data)} 条总数据中过滤)")
     except Exception as e:
         print(f"读取文件失败: {e}")
         return

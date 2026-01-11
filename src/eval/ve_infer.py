@@ -320,13 +320,13 @@ def run_evaluation(dataset_name, model: str = None):
     # 数据集配置
     dataset_configs = {
         "scigen": {
-            "data_path": os.path.join(PROJECT_ROOT, "data", "scigen.json"),
+            "data_path": os.path.join(PROJECT_ROOT, "data", "scigenbench.json"),
             "image_base_dir": os.path.join(PROJECT_ROOT, "images", "scigen"),
             "results_dir": os.path.join(PROJECT_ROOT, "results", "scigen", "vqa"),
             "models": ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
         },
         "seephys": {
-            "data_path": os.path.join(PROJECT_ROOT, "data", "seephys.json"),
+            "data_path": os.path.join(PROJECT_ROOT, "data", "scigenbench.json"),
             "image_base_dir": os.path.join(PROJECT_ROOT, "images", "seephys"),
             "results_dir": os.path.join(PROJECT_ROOT, "results", "seephys", "vqa"),
             "models": ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
@@ -362,7 +362,11 @@ def run_evaluation(dataset_name, model: str = None):
     print(f"{'='*60}")
     print("Loading benchmark data...")
     with open(DATA_PATH, 'r', encoding='utf-8') as f:
-        benchmark_data = json.load(f)
+        all_data = json.load(f)
+    
+    # 根据 source 字段过滤数据
+    benchmark_data = [item for item in all_data if item.get('source') == dataset_name]
+    print(f"Loaded {len(benchmark_data)} items from {dataset_name} (filtered from {len(all_data)} total items)")
 
     # 建立 ID 到 Image Type 的映射，用于最后统计
     id_to_type_map = {str(item["id"]): item.get("image_type", "Unknown") for item in benchmark_data}

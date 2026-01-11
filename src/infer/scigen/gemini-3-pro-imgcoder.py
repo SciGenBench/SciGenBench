@@ -34,7 +34,7 @@ BASE_HOST = 'http://35.220.164.252:3888'
 MODEL_NAME = "gemini-3-pro-preview" 
 
 # 路径配置（相对于项目根目录）
-INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigen.json")
+INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
 BASE_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "images", "scigen", "gemini-3-pro-imgcoder")
 
 # 自动生成子目录
@@ -219,7 +219,10 @@ def main():
     print(f"Loading: {INPUT_FILE}")
     try:
         with open(INPUT_FILE, 'r', encoding='utf-8') as f:
-            data_items = json.load(f)
+            all_data = json.load(f)
+        # 根据 source 字段过滤数据（scigen 目录只处理 source=scigen）
+        data_items = [item for item in all_data if item.get('source') == 'scigen']
+        print(f"共加载 {len(data_items)} 条 scigen 任务 (从 {len(all_data)} 条总数据中过滤)")
     except Exception as e:
         print(f"Load failed: {e}")
         return

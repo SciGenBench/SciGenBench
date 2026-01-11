@@ -250,17 +250,18 @@ def run_dataset(dataset: str, model: Optional[str] = None):
     PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     if dataset == "scigen":
-        DATA_PATH = os.path.join(PROJECT_ROOT, "data", "scigen.json")
         IMAGE_BASE_DIR = os.path.join(PROJECT_ROOT, "images", "scigen")
         RESULTS_DIR = os.path.join(PROJECT_ROOT, "results", "scigen", "llm_as_judge")
         all_models = ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
     elif dataset == "seephys":
-        DATA_PATH = os.path.join(PROJECT_ROOT, "data", "seephys.json")
         IMAGE_BASE_DIR = os.path.join(PROJECT_ROOT, "images", "seephys")
         RESULTS_DIR = os.path.join(PROJECT_ROOT, "results", "seephys", "llm_as_judge")
         all_models = ["gemini-3-flash-imgcoder", "gemini-3-pro-imgcoder", "qwen3-imgcoder", "hunyuan", "nanobanana-pro", "nanobanana", "flux2", "qwen-image-plus", "seedream4.0", "gpt-image1", "gpt-image1_5"]
     else:
         raise ValueError(f"Unknown dataset: {dataset}")
+    
+    # 统一使用 scigenbench.json
+    DATA_PATH = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
     
     # 如果指定了模型，只评估该模型；否则评估所有模型
     if model:
@@ -277,7 +278,11 @@ def run_dataset(dataset: str, model: Optional[str] = None):
         return
 
     with open(DATA_PATH, 'r', encoding='utf-8') as f:
-        benchmark_data = json.load(f)
+        all_data = json.load(f)
+    
+    # 根据 source 字段过滤数据
+    benchmark_data = [item for item in all_data if item.get('source') == dataset]
+    print(f"Loaded {len(benchmark_data)} items from {dataset} (filtered from {len(all_data)} total items)")
 
     id_to_type_map = {str(item["id"]): item.get("image_type", "Unknown") for item in benchmark_data}
 

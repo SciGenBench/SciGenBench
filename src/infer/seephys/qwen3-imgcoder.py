@@ -34,7 +34,7 @@ BASE_HOST = 'http://35.220.164.252:3888'
 MODEL_NAME = "Qwen/Qwen3-VL-235B-A22B-Instruct" 
 
 # 路径配置（相对于项目根目录）
-INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "seephys.json")
+INPUT_FILE = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
 BASE_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "images", "seephys", "qwen3-imgcoder")
 
 # 自动生成子目录
@@ -219,7 +219,10 @@ def main():
     print(f"Loading: {INPUT_FILE}")
     try:
         with open(INPUT_FILE, 'r', encoding='utf-8') as f:
-            data_items = json.load(f)
+            all_data = json.load(f)
+        # 根据 source 字段过滤数据（seephys 目录只处理 source=seephys）
+        data_items = [item for item in all_data if item.get('source') == 'seephys']
+        print(f"共加载 {len(data_items)} 条 seephys 任务 (从 {len(all_data)} 条总数据中过滤)")
     except Exception as e:
         print(f"Load failed: {e}")
         return

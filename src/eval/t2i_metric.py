@@ -23,7 +23,8 @@ from transformers import CLIPTokenizer
 # 获取项目根目录（假设脚本从项目根目录运行）
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-DATA_PATH = os.path.join(PROJECT_ROOT, "data", "seephys.json")
+# 统一使用 scigenbench.json
+DATA_PATH = os.path.join(PROJECT_ROOT, "data", "scigenbench.json")
 GEN_BASE_DIR = os.path.join(PROJECT_ROOT, "images", "seephys")
 GT_BASE_DIR = os.path.join(PROJECT_ROOT, "data", "seephys_images")
 RESULTS_DIR = os.path.join(PROJECT_ROOT, "results", "seephys", "t2i")
@@ -356,7 +357,11 @@ def main():
     
     print(f"Loading data from {DATA_PATH}...")
     with open(DATA_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
+        all_data = json.load(f)
+    
+    # 根据 source 字段过滤数据（t2i_metric.py 只处理 seephys）
+    data = [item for item in all_data if item.get('source') == 'seephys']
+    print(f"Loaded {len(data)} items from seephys (filtered from {len(all_data)} total items)")
     
     id_to_prompt = {str(item["id"]): item.get("question", "") for item in data}
     
