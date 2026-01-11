@@ -1,4 +1,11 @@
-# Scientific Image Synthesis: Benchmarking, Methodologies, and Downstream Utility
+<p align="center">
+<h1 align="center">Scientific Image Synthesis: Benchmarking, Methodologies, and Downstream Utility</h1>
+
+<p align="center">
+    <a href="https://github.com/SciGenBench/SciGenBench"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
+    <a href="https://github.com/SciGenBench/SciGenBench/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SciGenBench/SciGenBench"></a>
+    <a href="https://hub.zenoml.com/project/b468f508-6492-40f2-8ff3-9db8db44c1b7/SciGenBench"><img src="https://img.shields.io/badge/📊-Model%20Outputs-purple"></a>
+</p>
 
 > **SciGenBench** is a benchmark for **scientific image generation**.
 > **ImgCoder** enables **logic-driven, verifiable diagrams** via *Understand → Plan → Code*.
