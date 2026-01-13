@@ -73,7 +73,7 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
 | GPT-Image-1.5 | 63.52 | 0.98 | 1.70 | **1.97** | 1.17 | 1.62 | **14.79** | **0.88** | 25.16 | 112.52 |
 | Nanobanana-Pro | **73.41** | 1.59 | 1.87 | **1.98** | 1.72 | **1.93** | 12.02 | 0.81 | 25.01 | 87.72 |
 
-#### 🧠 ImgCoder (Logic-Driven)
+#### 🧠 ImgCoder
 
 | Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
 |------|----------------|-----|-----|-----|----|-----|------|------|------|------|
