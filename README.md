@@ -55,31 +55,9 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
 - **Standard Metrics (SeePhys real-image subset)**  
   PSNR ↑, SSIM ↑, CLIP ↑, FID ↓
 
-#### 🧩 Open-source T2I Models
-
-| Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
-|------|----------------|-----|-----|-----|----|-----|------|------|------|------|
-| HunyuanImage-3.0 | 30.79 | 0.39 | 0.78 | 1.44 | 0.56 | 0.81 | 12.21 | 0.82 | 25.01 | 93.27 |
-| Qwen-Image | 38.86 | 0.24 | 0.70 | 1.48 | 0.30 | 0.76 | 9.63 | 0.78 | 25.02 | 120.42 |
-
-#### 🔒 Closed-source T2I Models
-
-| Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
-|------|----------------|-----|-----|-----|----|-----|------|------|------|------|
-| GPT-Image-1 | 42.97 | 0.57 | 1.37 | 1.90 | 0.84 | 1.19 | 13.07 | 0.84 | 25.14 | **77.31** |
-| Seedream-4.0 | 52.67 | 0.44 | 0.94 | 1.67 | 0.55 | 0.95 | 10.65 | 0.74 | 25.02 | 98.22 |
-| Nanobanana | 57.75 | 0.43 | 0.92 | 1.60 | 0.60 | 1.15 | 14.12 | 0.85 | 25.13 | 104.70 |
-| Flux2-Flex | 58.83 | 0.48 | 1.06 | 1.70 | 0.67 | 1.20 | 14.11 | 0.85 | 25.10 | 96.74 |
-| GPT-Image-1.5 | 63.52 | 0.98 | 1.70 | **1.97** | 1.17 | 1.62 | **14.79** | **0.88** | 25.16 | 112.52 |
-| Nanobanana-Pro | **73.41** | 1.59 | 1.87 | **1.98** | 1.72 | **1.93** | 12.02 | 0.81 | 25.01 | 87.72 |
-
-#### 🧠 ImgCoder
-
-| Model | R<sub>inv</sub> ↑ | C&F | L&P | R&O | SP | E&R | PSNR | SSIM | CLIP | FID ↓ |
-|------|----------------|-----|-----|-----|----|-----|------|------|------|------|
-| Qwen3-ImgCoder | 56.38 | 1.21 | 1.30 | 1.62 | 1.39 | 1.29 | 14.71 | 0.86 | **25.21** | 121.55 |
-| Gemini-3-Flash-ImgCoder | 76.93 | 1.80 | 1.88 | 1.88 | 1.92 | 1.91 | 14.63 | 0.85 | 25.18 | 117.83 |
-| Gemini-3-Pro-ImgCoder | **77.87** | **1.82** | **1.93** | 1.91 | **1.93** | 1.90 | 14.59 | 0.86 | 25.16 | 107.67 |
+<p align="center">
+  <img src="assets/results.png" alt="SciGenBench Leaderboard Results" width="100%">
+</p>
 
 ## 🚀 ImgCoder: Logic-Driven Synthesis
 
