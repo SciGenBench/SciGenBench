@@ -194,11 +194,12 @@ python run.py --dataset scigen --model gemini-3-pro-imgcoder --mode eval --metri
 If you find our code, model, or data are useful, please kindly cite our work:
 
 ```bibtex
-@article{anonymous2025scientific,
+@article{lin2026scientific,
   title={Scientific Image Synthesis: Benchmarking, Methodologies, and Downstream Utility},
-  author={Anonymous Authors},
-  journal={Under Review},
-  year={2025}
+  author={Honglin Lin and Chonghan Qin and Zheng Liu and Qizhi Pei and Yu Li and Zhanping Zhong and Xin Gao and Yanfeng Wang and Conghui He and Lijun Wu},
+  journal={arXiv preprint arXiv:2601.17027},
+  year={2026},
+  url={https://arxiv.org/abs/2601.17027/}
 }
 
 ```
