@@ -5,7 +5,7 @@
     <a href="https://arxiv.org/abs/2601.17027/"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
     <a href="https://github.com/SciGenBench/SciGenBench/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SciGenBench/SciGenBench"></a>
     <a href="https://scigenbench.github.io/"><img src="https://img.shields.io/badge/🌐-Project%20Page-blue"></a>
-    <a href="https://huggingface.co/datasets/J017athan/SciGenBench"><img src="https://img.shields.io/badge/🤗-HuggingFace%20Dataset-yellow"></a>
+    <a href="https://huggingface.co/collections/J017athan/scigenbench"><img src="https://img.shields.io/badge/🤗-HuggingFace-yellow"></a>
     <a href="https://hub.zenoml.com/project/b468f508-6492-40f2-8ff3-9db8db44c1b7/SciGenBench"><img src="https://img.shields.io/badge/📊-Model%20Outputs-purple"></a>
 </p>
 
