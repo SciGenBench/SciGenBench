@@ -59,6 +59,10 @@ The benchmark covers 5 major subjects and 25 fine-grained image types:
   <img src="assets/results.png" alt="SciGenBench Leaderboard Results" width="100%">
 </p>
 
+<p align="center">
+  <img src="assets/scatter.png" alt="Performance Evolution on SciGenBench." width="100%">
+</p>
+
 ## 🚀 ImgCoder: Logic-Driven Synthesis
 
 Unlike pixel-based models that generate images end-to-end, **ImgCoder** adopts a programmatic paradigm:
