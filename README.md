@@ -2,7 +2,7 @@
 <h1 align="center">Scientific Image Synthesis: Benchmarking, Methodologies, and Downstream Utility</h1>
 
 <p align="center">
-    <a href="https://github.com/SciGenBench/SciGenBench"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
+    <a href="https://arxiv.org/abs/2601.17027/"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
     <a href="https://github.com/SciGenBench/SciGenBench/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SciGenBench/SciGenBench"></a>
     <a href="https://scigenbench.github.io/"><img src="https://img.shields.io/badge/🌐-Project%20Page-blue"></a>
     <a href="https://huggingface.co/datasets/J017athan/SciGenBench"><img src="https://img.shields.io/badge/🤗-HuggingFace%20Dataset-yellow"></a>
