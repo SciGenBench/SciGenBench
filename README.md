@@ -2,6 +2,31 @@
 <h1 align="center">Scientific Image Synthesis: Benchmarking, Methodologies, and Downstream Utility</h1>
 
 <p align="center">
+<strong>Honglin Lin</strong><sup>1,2†</sup>, 
+<strong>Chonghan Qin</strong><sup>3,2†</sup>, 
+<strong>Zheng Liu</strong><sup>4,2</sup>, 
+<strong>Qizhi Pei</strong><sup>2</sup>, 
+<strong>Yu Li</strong><sup>2</sup>, 
+<strong>Zhanping Zhong</strong><sup>1,2</sup>, 
+<strong>Xin Gao</strong><sup>1,2</sup>, 
+<strong>Yanfeng Wang</strong><sup>1</sup>, 
+<strong>Conghui He</strong><sup>2</sup>, 
+<strong>Lijun Wu</strong><sup>2*</sup>
+</p>
+
+<p align="center">
+<sup>1</sup>Shanghai Jiao Tong University &nbsp;&nbsp;
+<sup>2</sup>OpenDataLab, Shanghai Artificial Intelligence Laboratory &nbsp;&nbsp;
+<sup>3</sup>The University of Hong Kong &nbsp;&nbsp;
+<sup>4</sup>Peking University
+</p>
+
+<p align="center">
+<sup>†</sup>Equal Contribution &nbsp;&nbsp;
+<sup>*</sup>Corresponding Author
+</p>
+
+<p align="center">
     <a href="https://arxiv.org/abs/2601.17027/"><img src="https://img.shields.io/badge/📄-Paper-red"></a>
     <a href="https://github.com/SciGenBench/SciGenBench/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SciGenBench/SciGenBench"></a>
     <a href="https://scigenbench.github.io/"><img src="https://img.shields.io/badge/🌐-Project%20Page-blue"></a>
